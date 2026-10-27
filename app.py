@@ -21,7 +21,6 @@ if "results_db" not in st.session_state:
 is_emp_logged = "logged_emp_id" in st.session_state
 is_admin_logged = st.session_state.get("is_admin", False)
 
-# Əgər heç kim daxil olmayıbsa, birbaşa əsas ekranda Giriş formasını göstər
 if not is_emp_logged and not is_admin_logged:
     st.title("🔐 Sistemə Giriş")
     role = st.radio("Rolunuzu seçin:", ["Monitorinq Əməkdaşı", "Ofis Əməkdaşı (Admin)"])
@@ -99,28 +98,26 @@ elif is_emp_logged:
         else:
             citizen = pd.DataFrame()
             
-             # Excel-dən tapılan vətəndaşın məlumatlarını oxumaq
-     if not citizen.empty:
-         cit_row = citizen.iloc[0]
-         val_saa = str(cit_row.get("SAA", ""))
-         val_zarf = str(cit_row.get("Zarf", ""))
-         val_rayon = str(cit_row.get("Rayon_Ofis", "Abşeron"))
-         val_nov = str(cit_row.get("Monitorinq_Novu", "İlkin"))
-     else:
-         val_saa = "Tapılmadı (Excel-də bu FİN yoxdur)"
-         val_zarf = "—"
-         val_rayon = "Abşeron"
-         val_nov = "İlkin"
+        if not citizen.empty:
+            cit_row = citizen.iloc[0]
+            val_saa = str(cit_row.get("SAA", ""))
+            val_zarf = str(cit_row.get("Zarf", ""))
+            val_rayon = str(cit_row.get("Rayon_Ofis", "Abşeron"))
+            val_nov = str(cit_row.get("Monitorinq_Novu", "İlkin"))
+        else:
+            val_saa = "Tapılmadı (Excel-də bu FİN yoxdur)"
+            val_zarf = "—"
+            val_rayon = "Abşeron"
+            val_nov = "İlkin"
 
-     st.info("Vətəndaş məlumatları (Baxış rejimi):")
-     col_g1, col_g2 = st.columns(2)
-     with col_g1:
-         st.text_input("Soyadı, Adı, Ata adı", value=val_saa, disabled=True)
-         st.text_input("Müraciət Zərfi", value=val_zarf, disabled=True)
-     with col_g2:
-         office_rayon = st.selectbox("Rayon (Ofis)", ["Abşeron", "Sumqayıt", "Bakı", "Gəncə"], index=0, disabled=True)
-         mon_novu = st.selectbox("Monitorinq Növü", ["İlkin", "Aralıq", "Yekun"])
-
+        st.info("Vətəndaş məlumatları (Baxış rejimi):")
+        col_g1, col_g2 = st.columns(2)
+        with col_g1:
+            st.text_input("Soyadı, Adı, Ata adı", value=val_saa, disabled=True)
+            st.text_input("Müraciət Zərfi", value=val_zarf, disabled=True)
+        with col_g2:
+            office_rayon = st.selectbox("Rayon (Ofis)", ["Abşeron", "Sumqayıt", "Bakı", "Gəncə"], index=0, disabled=True)
+            mon_novu = st.selectbox("Monitorinq Növü", ["İlkin", "Aralıq", "Yekun"])
 
         st.markdown("---")
         st.subheader("Monitorinq Nəticələrinin Daxil Edilməsi")
@@ -210,4 +207,4 @@ elif is_emp_logged:
                     df_new = pd.DataFrame([new_row])
                     st.session_state.results_db = pd.concat([st.session_state.results_db, df_new], ignore_index=True)
                     st.success(f"Məlumat uğurla yadda saxlanıldı! Vaxt: {save_time}")
-    
+                    
