@@ -99,14 +99,28 @@ elif is_emp_logged:
         else:
             citizen = pd.DataFrame()
             
-        st.info("Vətəndaş məlumatları (Baxış rejimi):")
-        col_g1, col_g2 = st.columns(2)
-        with col_g1:
-            st.text_input("Soyadı, Adı, Ata adı", value="Məmmədov Əli Vəli oğlu", disabled=True)
-            st.text_input("Müraciət Zərfi", value="Arıçılıq", disabled=True)
-        with col_g2:
-            office_rayon = st.selectbox("Rayon (Ofis)", ["Abşeron", "Sumqayıt", "Bakı"], disabled=True)
-            mon_novu = st.selectbox("Monitorinq Növü", ["İlkin", "Aralıq", "Yekun"])
+             # Excel-dən tapılan vətəndaşın məlumatlarını oxumaq
+     if not citizen.empty:
+         cit_row = citizen.iloc[0]
+         val_saa = str(cit_row.get("SAA", ""))
+         val_zarf = str(cit_row.get("Zarf", ""))
+         val_rayon = str(cit_row.get("Rayon_Ofis", "Abşeron"))
+         val_nov = str(cit_row.get("Monitorinq_Novu", "İlkin"))
+     else:
+         val_saa = "Tapılmadı (Excel-də bu FİN yoxdur)"
+         val_zarf = "—"
+         val_rayon = "Abşeron"
+         val_nov = "İlkin"
+
+     st.info("Vətəndaş məlumatları (Baxış rejimi):")
+     col_g1, col_g2 = st.columns(2)
+     with col_g1:
+         st.text_input("Soyadı, Adı, Ata adı", value=val_saa, disabled=True)
+         st.text_input("Müraciət Zərfi", value=val_zarf, disabled=True)
+     with col_g2:
+         office_rayon = st.selectbox("Rayon (Ofis)", ["Abşeron", "Sumqayıt", "Bakı", "Gəncə"], index=0, disabled=True)
+         mon_novu = st.selectbox("Monitorinq Növü", ["İlkin", "Aralıq", "Yekun"])
+
 
         st.markdown("---")
         st.subheader("Monitorinq Nəticələrinin Daxil Edilməsi")
